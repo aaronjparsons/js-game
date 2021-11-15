@@ -41,6 +41,15 @@ class Person extends GameObject {
       // Move the player collision box
       state.map.moveWall(this.x, this.y, this.direction);
       this.movingProgressRemaining = GRID_SIZE;
+      this.updateSprite()
+    }
+
+    if (behavior.type === 'stand') {
+      setTimeout(() => {
+        utils.emitEvent('PersonStandComplete', {
+          whoId: this.id
+        });
+      }, behavior.time)
     }
   }
 
@@ -48,6 +57,13 @@ class Person extends GameObject {
     const [property, change] = this.directionUpdate[this.direction];
     this[property] += change;
     this.movingProgressRemaining -= 1;
+
+    if (this.movingProgressRemaining === 0) {
+      // Walk finished
+      utils.emitEvent('PersonWalkingComplete', {
+        whoId: this.id
+      });
+    }
   }
 
   updateSprite() {
