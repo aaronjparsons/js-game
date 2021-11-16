@@ -1,4 +1,4 @@
-class Person extends GameObject {
+class Player extends GameObject {
   constructor(config) {
     super(config)
     this.movingProgressRemaining = 0;
@@ -11,6 +11,8 @@ class Person extends GameObject {
       'left': ['x', -1],
       'right': ['x', 1],
     }
+    this.directionInput = new DirectionInput();
+    this.directionInput.init();
   }
 
   update(state) {
@@ -19,10 +21,10 @@ class Person extends GameObject {
     } else {
 
       // Case: Keyboard ready and have arrow pressed
-      if (this.isPlayerControlled && state.arrow) {
+      if (this.isPlayerControlled && this.directionInput.direction) {
         this.startBehavior(state, {
           type: 'walk',
-          direction: state.arrow
+          direction: this.directionInput.direction
         })
       }
       this.updateSprite();
